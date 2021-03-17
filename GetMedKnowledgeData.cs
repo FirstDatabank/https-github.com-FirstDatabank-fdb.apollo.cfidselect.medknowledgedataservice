@@ -38,9 +38,8 @@ namespace fdb.apollo.cfidselect.mkdataservice
         private QueryResult GetData(ILogger log)
         {
             var query = @"SELECT ndc, gcn_seqno, df, daddnc AS daddnc_fdb, obsdtec AS obsdtec_fdb,dupdc AS dupdc_fdb FROM wizard.ubr_rndc_dy";
-            //var conn = new OracleConnection(_configuration["Settings:OracleConnectionString"]);
-            var conn = new OracleConnection("Data Source=hbm001indora3.companynet.org:1521/deva.companynet.org/DEVA;User ID=magellan;Password=astr0nut;Pooling=true;");
-
+            var conn = new OracleConnection(_configuration["Settings:OracleConnectionString"]);
+            
             var list = new List<string>();
             string errorMessage = "";
             try
