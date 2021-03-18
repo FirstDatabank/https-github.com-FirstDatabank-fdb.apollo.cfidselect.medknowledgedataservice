@@ -3,7 +3,7 @@
     "fdb.apollo.cfidselect.mkdataservice": {
       "commandName": "Project",
       "environmentVariables": {
-        "AppConfigConnectionString": "Endpoint=https://dev-data-acq-onbase-app-configuration.azconfig.io;Id=znXa-l0-s0:PvoY5dJY3e5HGEqh1ai6;Secret=dwfnvalBPaWK3hioqzXF5bHT8GW7hd6mWivJY1Bi+so=",
+        "AppConfigConnectionString": "Endpoint=https://config-cfidselect-dev-001.azconfig.io;Id=ZkEy-l6-s0:16fZsNldzEejOFmheyjs;Secret=ZcSeNtb+j8I11D5EHO/XvBllJ0PXSMgsVfzIrEMrNa8=",
         "ASPNETCORE_ENVIRONMENT": "dev"
       }
     },

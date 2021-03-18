@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Azure.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -16,7 +17,9 @@ namespace fdb.apollo.cfidselect.mkdataservice
     public class GetMedKnowledgeData
     {
         private IConfiguration _configuration;
+
         public GetMedKnowledgeData(IConfiguration configuration)
+        
         {
             _configuration = configuration;
         }
@@ -26,7 +29,7 @@ namespace fdb.apollo.cfidselect.mkdataservice
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("C# HTTP trigger function process started.");
             var result = GetData(log);
             if (result.isSuccess)
                 return new OkObjectResult(result.Data);
@@ -37,8 +40,9 @@ namespace fdb.apollo.cfidselect.mkdataservice
 
         private QueryResult GetData(ILogger log)
         {
-            var query = @"SELECT ndc, gcn_seqno, df, daddnc AS daddnc_fdb, obsdtec AS obsdtec_fdb,dupdc AS dupdc_fdb FROM wizard.ubr_rndc_dy";
-            var conn = new OracleConnection(_configuration["Settings:OracleConnectionString"]);
+            var query = @"SELECT * FROM (SELECT ndc, gcn_seqno, df, daddnc AS daddnc_fdb, obsdtec AS obsdtec_fdb,dupdc AS dupdc_fdb FROM wizard.ubr_rndc_dy) WHERE ROWNUM <= 10";
+            var connString = _configuration["OracleConnString"];
+            var conn = new OracleConnection(connString);
             
             var list = new List<string>();
             string errorMessage = "";

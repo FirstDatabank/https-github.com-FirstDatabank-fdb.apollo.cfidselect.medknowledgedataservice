@@ -7,7 +7,7 @@ using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-//[assembly: FunctionsStartup(typeof(fdb.apollo.cfidselect.mkdataservice.Startup))]
+[assembly: FunctionsStartup(typeof(fdb.apollo.cfidselect.mkdataservice.Startup))]
 namespace fdb.apollo.cfidselect.mkdataservice
 {
     public class Startup : FunctionsStartup
@@ -19,16 +19,17 @@ namespace fdb.apollo.cfidselect.mkdataservice
             var managedIdentityCredentials = new ManagedIdentityCredential();
             var defaultCredentials = new DefaultAzureCredential();
             builder.ConfigurationBuilder
-            .AddEnvironmentVariables();
-            //.AddAzureAppConfiguration((options) =>
-            //{
-            //    options.Connect(Environment.GetEnvironmentVariable("AppConfigConnectionString"));
-            //    options.ConfigureKeyVault(vault => vault.SetCredential(new DefaultAzureCredential()));
-                
-            //    //use following after setting managed identity
-            //    //options.Connect(new Uri(Environment.GetEnvironmentVariable("ConfigConnString")), new ManagedIdentityCredential()));
+            .AddEnvironmentVariables()
+            .AddAzureAppConfiguration((options) =>
+            {
+                var configconnection = Environment.GetEnvironmentVariable("AppConfigConnectionString");
+                options.Connect(configconnection);
+                options.ConfigureKeyVault(vault => vault.SetCredential(new DefaultAzureCredential()));
 
-            //}); 
+                //use following after setting managed identity
+                //options.Connect(new Uri(Environment.GetEnvironmentVariable("ConfigConnString")), new ManagedIdentityCredential()));
+
+            });
 
             Configuration = builder.ConfigurationBuilder.Build();
         }
@@ -40,7 +41,8 @@ namespace fdb.apollo.cfidselect.mkdataservice
 
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            //builder.Services.AddAzureAppConfiguration();
+            builder.Services.Configure<AppSettings>(Configuration);
+            builder.Services.AddAzureAppConfiguration();
             builder.Services.AddOptions();
         }
 
